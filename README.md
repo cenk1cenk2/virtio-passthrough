@@ -1,4 +1,4 @@
-Forked from https://github.com/BigAnteater/KVM-GPU-Passthrough
+Forked from https://github.com/BigAnteater/KVM-GPU-Passthrough and https://gitlab.com/risingprismtv/single-gpu-passthrough
 
 # Single GPU Passthrough Scripts
 
