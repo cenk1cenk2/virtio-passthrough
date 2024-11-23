@@ -97,5 +97,7 @@ done <"$input"
 # virsh nodedev-reattach pci_0000_08_00_0
 # virsh nodedev-reattach pci_0000_08_00_1
 
+systemctl restart coolercontrold.service
+
 echo "[$DATE] End of Teardown!"
 echo "---------------------------------------------------------------------"
