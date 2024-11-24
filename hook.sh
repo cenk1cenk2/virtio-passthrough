@@ -27,8 +27,5 @@ replace "/etc/systemd/system/evdev-proxy.service" "systemd/evdev-proxy.service"
 systemctl daemon-reload
 
 replace "/etc/evdev-proxy/config.toml" "evdev-proxy/config.toml"
-replace "/etc/udev/rules.d/80-evdev-proxy.rules" "udev/80-evdev-proxy.rules"
-udevadm control --reload-rules
-udevadm trigger
 
 echo "Hooks are installed."
