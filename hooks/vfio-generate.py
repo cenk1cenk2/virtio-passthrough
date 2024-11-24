@@ -91,4 +91,5 @@ for _, subdevices in devices:
     print(f"Generated configuration for device: {device.name}", file=sys.stderr)
 
 print("Configuration file will be generated.", file=sys.stderr)
+print("-------------------------------------", file=sys.stderr)
 print("\n".join(conf))
