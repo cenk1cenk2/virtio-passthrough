@@ -57,6 +57,8 @@ USBIDClass = { vendor = 0x047d, model = 0x80d6, class = 'Keyboard' }
 # Keychron Keychron K7
 [[device.Simple.selector]]
 USBID = { vendor = 0x05ac, model = 0x0250 }
+[[device.Simple.selector]]
+Bus = { bus = "bluetooth", device_group = "5/5ac/250:0c:7a:15:a9:81:d8" }
 
 # Razer Razer Mamba Elite
 [[device.Simple.selector]]
