@@ -53,3 +53,5 @@ USBIDClass = { vendor = 0x047d, model = 0x80d6, class = 'Keyboard' }
 [[device.Simple.selector]]
 # Razer Razer Mamba Elite
 USBIDClass = { vendor = 0x1532, model = 0x006c, class = 'Mouse' }
+# Keychron Keychron K7
+USBIDClass = { vendor = 0x05ac, model = 0x0250, class = 'Keyboard' }
