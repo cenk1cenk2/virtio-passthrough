@@ -19,12 +19,16 @@ function replace() {
 mkdir -p /etc/libvirt/hooks
 
 replace "/etc/libvirt/hooks/qemu" "hooks/qemu"
-replace "/usr/local/bin/vfio-generate" "hooks/vfio-generate.py"
 replace "/usr/local/bin/vfio-startup" "hooks/vfio-startup"
 replace "/usr/local/bin/vfio-teardown" "hooks/vfio-teardown"
 
 replace "/etc/systemd/system/libvirt-nosleep@.service" "systemd/libvirt-nosleep@.service"
 replace "/etc/systemd/system/evdev-proxy.service" "systemd/evdev-proxy.service"
 systemctl daemon-reload
+
+replace "/etc/evdev-proxy/config.toml" "evdev-proxy/config.toml"
+replace "/etc/udev/rules.d/80-evdev-proxy.rules" "udev/80-evdev-proxy.rules"
+udevadm control --reload-rules
+udevadm trigger
 
 echo "Hooks are installed."
