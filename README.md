@@ -1,5 +1,8 @@
 Forked from https://gitlab.com/risingprismtv/single-gpu-passthrough
 
+as evdev installation
+https://github.com/cenk1cenk2/evdev-proxy/tree/all-keys
+
 # Single GPU Passthrough Scripts
 
 Scripts for passing a single GPU from a Linux host to a Windows VM and back.
