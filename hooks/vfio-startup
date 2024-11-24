@@ -84,7 +84,6 @@ if lspci -nn | grep -e VGA | grep -s NVIDIA; then
   grep -qsF "true" "/tmp/vfio-is-nvidia" || echo "true" >/tmp/vfio-is-nvidia
 
   echo "efi-framebuffer.0" >/sys/bus/platform/drivers/efi-framebuffer/unbind
-  sleep 3
 
   SERVICES=("nvidia-persistenced.service" "coolercontrold.service")
 
