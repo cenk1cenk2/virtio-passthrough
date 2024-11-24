@@ -59,21 +59,3 @@ if args.subcommand == "evdev-proxy":
     print("evdev-proxy file will be generated.", file=sys.stderr)
     print("-------------------------------------", file=sys.stderr)
     print("\n".join(conf))
-
-elif args.subcommand == "udev":
-    conf = []
-
-    for _, subdevices in devices:
-        device = next(subdevices)
-
-        conf.append("")
-        conf.append(f"# {device.name}")
-        conf.append(
-            f'KERNEL=="event[0-9]|event[0-9][0-9]", SUBSYSTEM=="input", ATTRS{{idVendor}}=="{device.info.vendor:04x}", ATTRS{{idProduct}}=="{device.info.product:04x}", ACTION=="add", SYMLINK+="input/proxy-evdev-{device.info.vendor:04x}-{device.info.product:04x}"'
-        )
-
-        print(f"Generated configuration for device: {device.name}", file=sys.stderr)
-
-    print("udev rules will be generated.", file=sys.stderr)
-    print("-------------------------------------", file=sys.stderr)
-    print("\n".join(conf))
