@@ -101,6 +101,13 @@ if lspci -nn | grep -e VGA | grep -s NVIDIA; then
     done
   done
 
+  echo "[$DATE] Checking who is still using the NVIDIA GPU."
+  while [ "$(lsof /dev/nvidia* | wc -l)" -gt 1 ]; do
+    echo "[$DATE] Waiting for NVIDIA GPU to be free."
+    sleep "1"
+  done
+  lsof /dev/nvidia*
+
   modprobe -r nvidia_uvm && echo "[$DATE] NVIDIA UVM Unloaded"
   modprobe -r nvidia_drm && echo "[$DATE] NVIDIA DRM Unloaded"
   modprobe -r nvidia_modeset && echo "[$DATE] NVIDIA Modeset Unloaded"
@@ -108,9 +115,6 @@ if lspci -nn | grep -e VGA | grep -s NVIDIA; then
   modprobe -r i2c_nvidia_gpu && echo "[$DATE] NVIDIA I2C Unloaded"
   modprobe -r drm_kms_helper && echo "[$DATE] DRM KMS Helper Unloaded"
   modprobe -r drm && echo "[$DATE] DRM Unloaded"
-
-  echo "[$DATE] Checking who is still using the NVIDIA GPU."
-  lsof /dev/nvidia*
 
   echo "[$DATE] NVIDIA GPU Drivers hopefully unloaded."
 fi
@@ -136,6 +140,10 @@ modprobe vfio_iommu_type1
 
 systemctl start "coolercontrold.service"
 echo "[$DATE] Cooler control service started in the background."
+
+systemctl stop evdev-proxy.service
+vfio-generate >/etc/evdev-proxy/config.toml
+echo "[$DATE] evdev-proxy configuration generated."
 
 systemctl start evdev-proxy.service
 echo "[$DATE] evdev-proxy started in the background."
