@@ -1,47 +1,45 @@
 #!/usr/bin/env python3
 
-from os import walk
 import evdev
+import re
 
 devices = {}
 
-for _, _, filenames in walk("/dev/input/by-id"):
-    for file in sorted(filenames):
-        try:
-            path = f"/dev/input/by-id/{file}"
-            device = evdev.InputDevice(path)
+ignores = [
+    "^HD-Audio.*$",
+    "^HDA.*$",
+    "^Power Button.*$",
+    "^PC Speaker.*$",
+    "^.*Control$",
+]
 
-            if device.name not in devices:
-                devices[device.name] = []
+for path in evdev.list_devices():
+    try:
+        device = evdev.InputDevice(path)
 
-            devices[device.name].append({"device": device, "path": path})
-        except:  # noqa: E722
-            pass
+        if any([re.search(ignore, device.name) for ignore in ignores]):
+            print(f"Ignoring by expression: {device.name}")
+            continue
 
+        if device.name not in devices:
+            devices[device.name] = []
+
+        devices[device.name].append({"device": device, "path": path})
+    except:  # noqa: E722
+        print(f"Failed to open {path}")
+
+print()
+print("evdev-proxy devices")
+print()
 for name, device in devices.items():
-    print(f"[DEVICE] {name}")
-    for subdevice in device:
-        print(f"[PATH] {subdevice['path']}")
-
+    c = ""
+    if name.endswith("Mouse"):
+        c = "Mouse"
+    elif name.endswith("Keyboard"):
+        c = "Keyboard"
     print()
-
-print("Almost done!")
-
-print()
-print("evdev inputs")
-print()
-
-for name, device in devices.items():
-    print("<input type='evdev'>")
-    print(f"  <source dev='{device[0]['path']}' grab='all' repeat='on'/>")
-    print("</input>")
-
-print()
-print("evdev devices")
-print()
-for name, device in devices.items():
-    print("[[device.Simple.selector]]")
     print(f"# {name}")
+    print("[[device.Simple.selector]]")
     print(
-        f"USBIDClass = {{ vendor = 0x{device[0]['device'].info.vendor:04x}, model = 0x{device[0]['device'].info.product:04x}, class = '' }}"
+        f"USBIDClass = {{ vendor = 0x{device[0]['device'].info.vendor:04x}, model = 0x{device[0]['device'].info.product:04x}, class = '{c}' }}"
     )

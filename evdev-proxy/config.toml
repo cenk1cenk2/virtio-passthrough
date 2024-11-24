@@ -35,23 +35,35 @@ name = "EvdevProxyAIO"
 vendor = 0x1337
 model = 0x1337
 class = "AIO"
-[[device.Simple.selector]]
-# JosefAdamcik Sofle Keyboard
-USBIDClass = { vendor = 0xfc32, model = 0x0287, class = 'Keyboard' }
-[[device.Simple.selector]]
+
 # JosefAdamcik Sofle Mouse
+[[device.Simple.selector]]
 USBIDClass = { vendor = 0xfc32, model = 0x0287, class = 'Mouse' }
+
+# JosefAdamcik Sofle Keyboard
 [[device.Simple.selector]]
-# Kensington ORBIT WIRELESS TB Mouse
-USBIDClass = { vendor = 0x047d, model = 0x80a6, class = 'Mouse' }
-[[device.Simple.selector]]
+USBIDClass = { vendor = 0xfc32, model = 0x0287, class = 'Keyboard' }
+
 # Kensington SlimBlade Pro(2.4GHz Receiver) Kensington SlimBlade Pro Trackball(2.4GHz Receiver)
+[[device.Simple.selector]]
 USBIDClass = { vendor = 0x047d, model = 0x80d6, class = 'Mouse' }
-[[device.Simple.selector]]
-# Kensington SlimBlade Pro(2.4GHz Receiver) Kensington SlimBlade Pro Trackball(2.4GHz Receiver) Keyboard
-USBIDClass = { vendor = 0x047d, model = 0x80d6, class = 'Keyboard' }
-[[device.Simple.selector]]
+
 # Razer Razer Mamba Elite
+[[device.Simple.selector]]
 USBIDClass = { vendor = 0x1532, model = 0x006c, class = 'Mouse' }
-# Keychron Keychron K7
+
+# Kensington SlimBlade Pro(2.4GHz Receiver) Kensington SlimBlade Pro Trackball(2.4GHz Receiver) Keyboard
+[[device.Simple.selector]]
+USBIDClass = { vendor = 0x047d, model = 0x80d6, class = 'Keyboard' }
+
+# Razer Razer Mamba Elite Keyboard
+[[device.Simple.selector]]
+USBIDClass = { vendor = 0x1532, model = 0x006c, class = 'Keyboard' }
+
+# Kensington ORBIT WIRELESS TB Mouse
+[[device.Simple.selector]]
+USBIDClass = { vendor = 0x047d, model = 0x80a6, class = 'Mouse' }
+
+# Keychron K7
+[[device.Simple.selector]]
 USBIDClass = { vendor = 0x05ac, model = 0x0250, class = 'Keyboard' }
