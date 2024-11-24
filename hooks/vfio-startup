@@ -138,13 +138,12 @@ modprobe vfio
 modprobe vfio_pci
 modprobe vfio_iommu_type1
 
+# services that hook
+
 systemctl start "coolercontrold.service"
 echo "[$DATE] Cooler control service started in the background."
 
 systemctl stop evdev-proxy.service
-vfio-generate >/etc/evdev-proxy/config.toml
-echo "[$DATE] evdev-proxy configuration generated."
-
 systemctl start evdev-proxy.service
 echo "[$DATE] evdev-proxy started in the background."
 
