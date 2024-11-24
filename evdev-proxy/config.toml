@@ -72,4 +72,4 @@ USBIDClass = { vendor = 0x1d50, model = 0x615e, class = 'Mouse' }
 [[device.Simple.selector]]
 USBIDClass = { vendor = 0x1d50, model = 0x615e, class = 'Keyboard' }
 [[device.Simple.selector]]
-Bus = { bus = "bluetooth", device_group = "5/1d50/250:0c:7a:15:a9:81:d8" }
+Bus = { bus = "bluetooth", device_group = "5/1d50/615e:0c:7a:15:a9:81:d8" }
