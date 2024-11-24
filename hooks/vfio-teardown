@@ -30,8 +30,6 @@ DATE=$(date +"%Y-%m-%dZ%R:%S")
 echo "---------------------------------------------------------------------"
 echo "[$DATE] Beginning of Teardown!"
 
-pkill evdev-proxy
-
 ## Unload VFIO-PCI driver ##
 modprobe -r vfio_pci
 modprobe -r vfio_iommu_type1
