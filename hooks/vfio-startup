@@ -42,7 +42,7 @@ if [[ -x /run/systemd/system ]] && echo "[$DATE] Installation has systemd."; the
   if systemctl is-active --quiet "$DISPLAY_MANAGER.service"; then
     grep -qsF "$DISPLAY_MANAGER" "/tmp/vfio-store-display-manager" || echo "$DISPLAY_MANAGER" >/tmp/vfio-store-display-manager
     systemctl stop "$DISPLAY_MANAGER.service"
-    systemctl isolate multi-user.target
+    # systemctl isolate multi-user.target
   fi
 
   while systemctl is-active --quiet "$DISPLAY_MANAGER.service"; do
@@ -101,18 +101,16 @@ if lspci -nn | grep -e VGA | grep -s NVIDIA; then
     done
   done
 
-  for i in {1..10}; do
-    modprobe -r nvidia_uvm && echo "[$DATE] NVIDIA UVM Unloaded"
-    modprobe -r nvidia_drm && echo "[$DATE] NVIDIA DRM Unloaded"
-    modprobe -r nvidia_modeset && echo "[$DATE] NVIDIA Modeset Unloaded"
-    modprobe -r nvidia && echo "[$DATE] NVIDIA Unloaded"
-    modprobe -r i2c_nvidia_gpu && echo "[$DATE] NVIDIA I2C Unloaded"
-    modprobe -r drm_kms_helper && echo "[$DATE] DRM KMS Helper Unloaded"
-    modprobe -r drm && echo "[$DATE] DRM Unloaded"
+  modprobe -r nvidia_uvm && echo "[$DATE] NVIDIA UVM Unloaded"
+  modprobe -r nvidia_drm && echo "[$DATE] NVIDIA DRM Unloaded"
+  modprobe -r nvidia_modeset && echo "[$DATE] NVIDIA Modeset Unloaded"
+  modprobe -r nvidia && echo "[$DATE] NVIDIA Unloaded"
+  modprobe -r i2c_nvidia_gpu && echo "[$DATE] NVIDIA I2C Unloaded"
+  modprobe -r drm_kms_helper && echo "[$DATE] DRM KMS Helper Unloaded"
+  modprobe -r drm && echo "[$DATE] DRM Unloaded"
 
-    echo "[$DATE] Checking who is still using the NVIDIA GPU."
-    lsof /dev/nvidia*
-  done
+  echo "[$DATE] Checking who is still using the NVIDIA GPU."
+  lsof /dev/nvidia*
 
   echo "[$DATE] NVIDIA GPU Drivers hopefully unloaded."
 fi
@@ -131,18 +129,21 @@ if lspci -nn | grep -e VGA | grep -s AMD; then
   echo "[$DATE] AMD GPU Drivers Unloaded"
 fi
 
-# virsh nodedev-detach pci_0000_08_00_0
-# virsh nodedev-detach pci_0000_08_00_1
-
 ## Load VFIO-PCI driver ##
 modprobe vfio
 modprobe vfio_pci
 modprobe vfio_iommu_type1
 
-echo "[$DATE] End of Startup!"
+systemctl start "coolercontrold.service"
+echo "[$DATE] Cooler control service started in the background."
 
-(
-  systemctl start "coolercontrold.service"
-  echo "[$DATE] Cooler control service started in the background."
-) &
+systemctl start evdev-proxy.service
+echo "[$DATE] evdev-proxy started in the background."
+
+while ! test -e "/dev/input/by-id/virtual-event-EvdevProxyAIO"; do
+  echo "[$DATE] Waiting for evdev-proxy to appear."
+  sleep "1"
+done
+
+echo "[$DATE] End of Startup!"
 echo "---------------------------------------------------------------------"

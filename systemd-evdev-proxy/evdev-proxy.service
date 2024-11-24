@@ -1,0 +1,6 @@
+[Unit]
+Description=Run evdev-proxy.
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/evdev-proxy

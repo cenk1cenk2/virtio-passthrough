@@ -26,9 +26,22 @@ for name, device in devices.items():
     print()
 
 print("Almost done!")
+
+print()
+print("evdev inputs")
 print()
 
 for name, device in devices.items():
     print("<input type='evdev'>")
     print(f"  <source dev='{device[0]['path']}' grab='all' repeat='on'/>")
     print("</input>")
+
+print()
+print("evdev devices")
+print()
+for name, device in devices.items():
+    print("[[device.Simple.selector]]")
+    print(f"# {name}")
+    print(
+        f"USBIDClass = {{ vendor = 0x{device[0]['device'].info.vendor:04x}, model = 0x{device[0]['device'].info.product:04x}, class = '' }}"
+    )

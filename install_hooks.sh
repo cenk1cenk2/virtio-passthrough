@@ -12,14 +12,24 @@ fi
 if test -e /usr/local/bin/vfio-teardown; then
   mv /usr/local/bin/vfio-teardown /usr/local/bin/vfio-teardown.bak
 fi
+if test -e /etc/evdev-proxy/config.toml; then
+  mv /etc/evdev-proxy/config.toml /etc/evdev-proxy/config.toml.bak
+fi
 if test -e /etc/systemd/system/libvirt-nosleep@.service; then
   rm /etc/systemd/system/libvirt-nosleep@.service
 fi
+if test -e /etc/systemd/system/evdev-proxy.service; then
+  rm /etc/systemd/system/evdev-proxy.service
+fi
 
 cp systemd-no-sleep/libvirt-nosleep@.service /etc/systemd/system/libvirt-nosleep@.service
+cp systemd-evdev-proxy/evdev-proxy.service /etc/systemd/system/evdev-proxy.service
+systemctl daemon-reload
+
 cp hooks/vfio-startup /usr/local/bin/vfio-startup
 cp hooks/vfio-teardown /usr/local/bin/vfio-teardown
 cp hooks/qemu /etc/libvirt/hooks/qemu
+cp evdev-proxy/config.toml /etc/evdev-proxy/config.toml
 
 chmod +x /usr/local/bin/vfio-startup
 chmod +x /usr/local/bin/vfio-teardown
