@@ -2,6 +2,7 @@
 
 import evdev
 import re
+import collections
 
 devices = {}
 
@@ -31,7 +32,7 @@ for path in evdev.list_devices():
 print()
 print("evdev-proxy devices")
 print()
-for name, device in devices.items():
+for name, device in collections.OrderedDict(devices.items()).items():
     c = ""
     if name.endswith("Mouse"):
         c = "Mouse"
