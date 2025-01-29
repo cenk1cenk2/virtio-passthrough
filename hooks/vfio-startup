@@ -85,6 +85,8 @@ if lspci -nn | grep -e VGA | grep -s NVIDIA; then
 
   echo "efi-framebuffer.0" >/sys/bus/platform/drivers/efi-framebuffer/unbind
 
+  ## services
+
   SERVICES=("nvidia-persistenced.service" "coolercontrold.service")
 
   for service in "${SERVICES[@]}"; do
@@ -135,7 +137,7 @@ modprobe vfio
 modprobe vfio_pci
 modprobe vfio_iommu_type1
 
-# services that hook
+# services
 
 systemctl start "coolercontrold.service"
 echo "[$DATE] Cooler control service started in the background."

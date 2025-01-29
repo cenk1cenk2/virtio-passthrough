@@ -98,6 +98,8 @@ while read -r consoleNumber; do
   fi
 done <"$input"
 
+## Services ##
+
 systemctl restart coolercontrold.service
 systemctl start nvidia-persistenced.service
 
