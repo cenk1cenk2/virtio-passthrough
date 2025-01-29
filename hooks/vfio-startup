@@ -140,14 +140,16 @@ modprobe vfio_iommu_type1
 systemctl start "coolercontrold.service"
 echo "[$DATE] Cooler control service started in the background."
 
-systemctl stop evdev-proxy.service
-systemctl start evdev-proxy.service
-echo "[$DATE] evdev-proxy started in the background."
+if [ -z "$VIRSH_FEATURE_EVDEV" ]; then
+  systemctl stop evdev-proxy.service
+  systemctl start evdev-proxy.service
+  echo "[$DATE] evdev-proxy started in the background."
 
-while ! test -e "/dev/input/by-id/virtual-event-EvdevProxyAIO"; do
-  echo "[$DATE] Waiting for evdev-proxy to appear."
-  sleep "1"
-done
+  while ! test -e "/dev/input/by-id/virtual-event-EvdevProxyAIO"; do
+    echo "[$DATE] Waiting for evdev-proxy to appear."
+    sleep "1"
+  done
+fi
 
 echo "[$DATE] End of Startup!"
 echo "---------------------------------------------------------------------"

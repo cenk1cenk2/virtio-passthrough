@@ -30,7 +30,9 @@ DATE=$(date +"%Y-%m-%dZ%R:%S")
 echo "---------------------------------------------------------------------"
 echo "[$DATE] Beginning of Teardown!"
 
-systemctl stop evdev-proxy.service
+if [ -z "$VIRSH_FEATURE_EVDEV" ]; then
+  systemctl stop evdev-proxy.service
+fi
 
 ## Unload VFIO-PCI driver ##
 modprobe -r vfio_pci
