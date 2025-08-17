@@ -107,26 +107,15 @@ if lspci -nn | grep -e VGA | grep -s NVIDIA; then
   for i in {0..10}; do
     if [ "$(lsof /dev/nvidia* | wc -l)" -gt 0 ]; then
       echo "[$DATE] Waiting for NVIDIA GPU to be free."
+
       lsof /dev/nvidia*
 
       if [ "$i" -eq 10 ]; then
-        echo "[$DATE] NVIDIA GPU is still in use... Forcefully killing remaning applications."
-        PIDS="$(lsof /dev/nvidia* | awk '{ print $2 }' | uniq)"
+        echo "[$DATE] NVIDIA GPU is still in use. Can not proceed..."
 
-        for PID in $PIDS; do
-          if [ "$PID" != "PID" ]; then
-            echo "[$DATE] Killing PID: $PID"
-            kill -9 "$PID"
-          fi
-        done
-
-        if [ "$(lsof /dev/nvidia* | wc -l)" -gt 0 ]; then
-          echo "[$DATE] NVIDIA GPU is still in use after killing processes. Exiting script."
-          exit 1
-        else
-          echo "[$DATE] NVIDIA GPU is now free after killing processes."
-        fi
+        exit 1
       fi
+
       sleep "1"
     else
       echo "[$DATE] NVIDIA GPU is free."
