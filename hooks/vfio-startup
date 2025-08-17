@@ -36,22 +36,20 @@ echo "---------------------------------------------------------------------"
 echo "[$DATE] Beginning of Startup!"
 
 ## Get display manager on systemd based distros ##
-if [[ -x /run/systemd/system ]] && echo "[$DATE] Installation has systemd."; then
-  DISPLAY_MANAGER="$(grep 'ExecStart=' /etc/systemd/system/display-manager.service | awk -F'=' '{print $(NF-0)}')"
-  echo "[$DATE] Display Manager = $DISPLAY_MANAGER"
+DISPLAY_MANAGER="$(grep 'ExecStart=' /etc/systemd/system/display-manager.service | awk -F'=' '{print $(NF-0)}')"
+echo "[$DATE] Display Manager = $DISPLAY_MANAGER"
 
-  ## Stop display manager using systemd ##
-  if systemctl is-active --quiet "$DISPLAY_MANAGER.service"; then
-    grep -qsF "$DISPLAY_MANAGER" "/tmp/vfio-store-display-manager" || echo "$DISPLAY_MANAGER" >/tmp/vfio-store-display-manager
-    systemctl stop "$DISPLAY_MANAGER.service"
-    # systemctl isolate multi-user.target
-  fi
-
-  while systemctl is-active --quiet "$DISPLAY_MANAGER.service"; do
-    echo "[$DATE] Waiting for $DISPLAY_MANAGER to stop."
-    sleep "1"
-  done
+## Stop display manager using systemd ##
+if systemctl is-active --quiet "$DISPLAY_MANAGER.service"; then
+  grep -qsF "$DISPLAY_MANAGER" "/tmp/vfio-store-display-manager" || echo "$DISPLAY_MANAGER" >/tmp/vfio-store-display-manager
+  systemctl stop "$DISPLAY_MANAGER.service"
+  systemctl isolate multi-user.target
 fi
+
+while systemctl is-active --quiet "$DISPLAY_MANAGER.service"; do
+  echo "[$DATE] Waiting for $DISPLAY_MANAGER to stop."
+  sleep "1"
+done
 
 ## Unbind EFI-Framebuffer ##
 if test -e "/tmp/vfio-is-nvidia"; then
@@ -138,8 +136,8 @@ if lspci -nn | grep -e VGA | grep -s AMD; then
   echo efi-framebuffer.0 >/sys/bus/platform/drivers/efi-framebuffer/unbind
 
   ## Unload AMD GPU drivers ##
-  modprobe -r amdgpu
-  modprobe -r radeon
+  modprobe -rf amdgpu
+  modprobe -rf radeon
 
   echo "[$DATE] AMD GPU Drivers Unloaded"
 fi

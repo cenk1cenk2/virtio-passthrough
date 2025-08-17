@@ -95,5 +95,7 @@ done <"$input"
 systemctl restart coolercontrold.service
 systemctl start nvidia-persistenced.service
 
+systemctl start graphical.target
+
 echo "[$DATE] End of Teardown!"
 echo "---------------------------------------------------------------------"
