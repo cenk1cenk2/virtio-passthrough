@@ -103,19 +103,41 @@ if lspci -nn | grep -e VGA | grep -s NVIDIA; then
   done
 
   echo "[$DATE] Checking who is still using the NVIDIA GPU."
-  while [ "$(lsof "/dev/nvidia*" | wc -l)" -gt 1 ]; do
-    echo "[$DATE] Waiting for NVIDIA GPU to be free."
+  for i in {0..10}; do
+    if [ "$(lsof "/dev/nvidia*" | wc -l)" -gt 0 ]; then
+      echo "[$DATE] Waiting for NVIDIA GPU to be free."
+      lsof "/dev/nvidia*"
 
-    lsof "/dev/nvidia*"
-    sleep "1"
+      if [ "$i" -eq 10 ]; then
+        echo "[$DATE] NVIDIA GPU is still in use... Forcefully killing remaning applications."
+        PIDS="$(lsof /dev/nvidia* | awk '{ print $2 }' | uniq)"
+
+        for PID in $PIDS; do
+          if [ "$PID" != "PID" ]; then
+            echo "[$DATE] Killing PID: $PID"
+            kill -9 "$PID"
+          fi
+        done
+
+        if [ "$(lsof "/dev/nvidia*" | wc -l)" -gt 0 ]; then
+          echo "[$DATE] NVIDIA GPU is still in use after killing processes. Exiting script."
+          exit 1
+        else
+          echo "[$DATE] NVIDIA GPU is now free after killing processes."
+        fi
+      fi
+      sleep "1"
+    else
+      echo "[$DATE] NVIDIA GPU is free."
+      break
+    fi
   done
-  lsof /dev/nvidia*
 
-  modprobe -r nvidia_uvm && echo "[$DATE] NVIDIA UVM Unloaded"
-  modprobe -r nvidia_drm && echo "[$DATE] NVIDIA DRM Unloaded"
-  modprobe -r nvidia_modeset && echo "[$DATE] NVIDIA Modeset Unloaded"
-  modprobe -r nvidia && echo "[$DATE] NVIDIA Unloaded"
-  modprobe -r i2c_nvidia_gpu && echo "[$DATE] NVIDIA I2C Unloaded"
+  modprobe -rf nvidia_uvm && echo "[$DATE] NVIDIA UVM Unloaded"
+  modprobe -rf nvidia_drm && echo "[$DATE] NVIDIA DRM Unloaded"
+  modprobe -rf nvidia_modeset && echo "[$DATE] NVIDIA Modeset Unloaded"
+  modprobe -rf nvidia && echo "[$DATE] NVIDIA Unloaded"
+  modprobe -rf i2c_nvidia_gpu && echo "[$DATE] NVIDIA I2C Unloaded"
 
   echo "[$DATE] NVIDIA GPU Drivers hopefully unloaded."
 fi
