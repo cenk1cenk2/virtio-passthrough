@@ -20,6 +20,8 @@
 ## testing them for us!                            ## ## in your terminal  ##
 ##################################################### #######################
 
+set -xeu
+
 ################################# Variables #################################
 
 ## Adds current time to var for use in echo for a cleaner log and script ##
@@ -104,9 +106,9 @@ if lspci -nn | grep -e VGA | grep -s NVIDIA; then
 
   echo "[$DATE] Checking who is still using the NVIDIA GPU."
   for i in {0..10}; do
-    if [ "$(lsof "/dev/nvidia*" | wc -l)" -gt 0 ]; then
+    if [ "$(lsof /dev/nvidia* | wc -l)" -gt 0 ]; then
       echo "[$DATE] Waiting for NVIDIA GPU to be free."
-      lsof "/dev/nvidia*"
+      lsof /dev/nvidia*
 
       if [ "$i" -eq 10 ]; then
         echo "[$DATE] NVIDIA GPU is still in use... Forcefully killing remaning applications."
@@ -119,7 +121,7 @@ if lspci -nn | grep -e VGA | grep -s NVIDIA; then
           fi
         done
 
-        if [ "$(lsof "/dev/nvidia*" | wc -l)" -gt 0 ]; then
+        if [ "$(lsof /dev/nvidia* | wc -l)" -gt 0 ]; then
           echo "[$DATE] NVIDIA GPU is still in use after killing processes. Exiting script."
           exit 1
         else

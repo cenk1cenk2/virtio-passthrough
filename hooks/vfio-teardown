@@ -22,6 +22,8 @@
 
 ################################# Variables #################################
 
+set -xeu
+
 ## Adds current time to var for use in echo for a cleaner log and script ##
 DATE=$(date +"%Y-%m-%dZ%R:%S")
 
