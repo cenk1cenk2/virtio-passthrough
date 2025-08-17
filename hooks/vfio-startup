@@ -20,7 +20,7 @@
 ## testing them for us!                            ## ## in your terminal  ##
 ##################################################### #######################
 
-set -xeu
+# set -eu
 
 ################################# Variables #################################
 
@@ -56,8 +56,7 @@ fi
 ## Unbind EFI-Framebuffer ##
 if test -e "/tmp/vfio-is-nvidia"; then
   rm -f /tmp/vfio-is-nvidia
-else
-  test -e "/tmp/vfio-is-amd"
+elif test -e "/tmp/vfio-is-amd"; then
   rm -f /tmp/vfio-is-amd
 fi
 

@@ -22,7 +22,7 @@
 
 ################################# Variables #################################
 
-set -xeu
+# set -eu
 
 ## Adds current time to var for use in echo for a cleaner log and script ##
 DATE=$(date +"%Y-%m-%dZ%R:%S")
@@ -69,18 +69,10 @@ fi
 ## Restart Display Manager ##
 input="/tmp/vfio-store-display-manager"
 while read -r DISPLAY_MANAGER; do
-  if command -v systemctl; then
+  ## Make sure the variable got collected ##
+  echo "[$DATE] Will start display manager: $DISPLAY_MANAGER"
 
-    ## Make sure the variable got collected ##
-    echo "[$DATE] Will start display manager: $DISPLAY_MANAGER"
-
-    systemctl start "$DISPLAY_MANAGER.service"
-
-  else
-    if command -v sv; then
-      sv start "$DISPLAY_MANAGER"
-    fi
-  fi
+  systemctl start "$DISPLAY_MANAGER.service"
 done <"$input"
 
 ############################################################################################################
